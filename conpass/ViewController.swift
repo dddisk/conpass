@@ -50,7 +50,7 @@ class ViewController: UIViewController {
             view.addSubview(tableView)
             let nextButton = UIButton(frame: CGRect(x: 0,y: 0,width: 100,height:100))
             nextButton.setTitle("Go!", for: .normal)
-            nextButton.backgroundColor = UIColor.blue
+            nextButton.backgroundColor = .blue
             nextButton.addTarget(self, action: #selector(ViewController.goNext(_:)), for: .touchUpInside)
             view.addSubview(nextButton)
         }
