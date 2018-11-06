@@ -1,4 +1,5 @@
 import UIKit
+import SafariServices
 
 struct Resultsfield: Codable {
     var events: [Events]
@@ -38,21 +39,19 @@ class ViewController: UIViewController {
     
     private var tableView = UITableView()
     var resultsfields: Resultsfield = Resultsfield(events: [])
+    var NextText: String?
+    var NextUrl: String?
 
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
         title = "最新記事"
         
         setUpTableView: do {
             tableView.frame = view.frame
             tableView.dataSource = self
             view.addSubview(tableView)
-            let nextButton = UIButton(frame: CGRect(x: 0,y: 0,width: 100,height:100))
-            nextButton.setTitle("Go!", for: .normal)
-            nextButton.backgroundColor = UIColor.blue
-            nextButton.addTarget(self, action: #selector(ViewController.goNext(_:)), for: .touchUpInside)
-            view.addSubview(nextButton)
         }
         
         Connpass.fetchEvent(completion: { (resultsfields) in
@@ -63,19 +62,12 @@ class ViewController: UIViewController {
         })
         
     }
-
-    @objc func goNext(_ sender: UIButton) {
-        let nextvc = NextViewController()
-        nextvc.view.backgroundColor = UIColor.blue
-        self.present(nextvc, animated: true, completion: nil)
-    }
-
+    
 }
 
 extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
@@ -85,5 +77,15 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
+    }
+    
+}
+extension ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let resultsfield = resultsfields.events[indexPath.row]
+        let webPage = resultsfield.event_url
+        let safariVC = SFSafariViewController(url: NSURL(string: webPage)! as URL)
+        present(safariVC, animated: true, completion: nil)
     }
 }
