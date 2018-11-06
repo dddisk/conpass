@@ -1,4 +1,5 @@
 import UIKit
+import SafariServices
 
 struct Resultsfield: Codable {
     var events: [Events]
@@ -82,15 +83,9 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let nextvc = NextViewController()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let resultsfield = resultsfields.events[indexPath.row]
-        // NextViewControllerに渡す文字列をセット
-        NextText = resultsfield.title
-        appDelegate.url = resultsfield.event_url
-        // NextViewControllerへ遷移する
-        tableView.deselectRow(at: indexPath, animated: true)
-        self.present(nextvc, animated: true, completion: nil)
-        //もしくはself.present(NextViewController(), animated: true, completion: nil)
+        let webPage = resultsfield.event_url
+        let safariVC = SFSafariViewController(url: NSURL(string: webPage)! as URL)
+        present(safariVC, animated: true, completion: nil)
     }
 }
