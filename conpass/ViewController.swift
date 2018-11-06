@@ -51,11 +51,6 @@ class ViewController: UIViewController {
             tableView.frame = view.frame
             tableView.dataSource = self
             view.addSubview(tableView)
-//            let nextButton = UIButton(frame: CGRect(x: 0,y: 0,width: 100,height:100))
-//            nextButton.setTitle("Go!", for: .normal)
-//            nextButton.backgroundColor = .blue
-//            nextButton.addTarget(self, action: #selector(ViewController.goNext(_:)), for: .touchUpInside)
-//            view.addSubview(nextButton)
         }
         
         Connpass.fetchEvent(completion: { (resultsfields) in
@@ -67,13 +62,6 @@ class ViewController: UIViewController {
         
     }
     
-
-//    @objc func goNext(_ sender: UIButton) {
-//        let nextvc = NextViewController()
-//        nextvc.view.backgroundColor = UIColor.blue
-//        self.present(nextvc, animated: true, completion: nil)
-//    }
-
 }
 
 extension ViewController: UITableViewDataSource {
@@ -95,10 +83,11 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let nextvc = NextViewController()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let resultsfield = resultsfields.events[indexPath.row]
         // NextViewControllerに渡す文字列をセット
         NextText = resultsfield.title
-        NextUrl = resultsfield.event_url
+        appDelegate.url = resultsfield.event_url
         // NextViewControllerへ遷移する
         tableView.deselectRow(at: indexPath, animated: true)
         self.present(nextvc, animated: true, completion: nil)
