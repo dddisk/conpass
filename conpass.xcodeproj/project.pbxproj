@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		241ED44721903596005E7F85 /* NextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241ED44621903596005E7F85 /* NextViewController.swift */; };
 		24AF73812184171D00A65404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF73802184171D00A65404 /* AppDelegate.swift */; };
 		24AF73832184171D00A65404 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF73822184171D00A65404 /* ViewController.swift */; };
 		24AF73862184171D00A65404 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24AF73842184171D00A65404 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		241ED44621903596005E7F85 /* NextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextViewController.swift; sourceTree = "<group>"; };
 		24AF737D2184171D00A65404 /* conpass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conpass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24AF73802184171D00A65404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24AF73822184171D00A65404 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			children = (
 				24AF73802184171D00A65404 /* AppDelegate.swift */,
 				24AF73822184171D00A65404 /* ViewController.swift */,
+				241ED44621903596005E7F85 /* NextViewController.swift */,
 				24AF73842184171D00A65404 /* Main.storyboard */,
 				24AF73872184171E00A65404 /* Assets.xcassets */,
 				24AF73892184171E00A65404 /* LaunchScreen.storyboard */,
@@ -257,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				24AF73832184171D00A65404 /* ViewController.swift in Sources */,
+				241ED44721903596005E7F85 /* NextViewController.swift in Sources */,
 				24AF73812184171D00A65404 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -438,6 +442,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MTL_ENABLE_DEBUG_INFO = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = shiroma.conpass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
