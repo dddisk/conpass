@@ -38,21 +38,24 @@ class ViewController: UIViewController {
     
     private var tableView = UITableView()
     var resultsfields: Resultsfield = Resultsfield(events: [])
+    var NextText: String?
+    var NextUrl: String?
 
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
         title = "最新記事"
         
         setUpTableView: do {
             tableView.frame = view.frame
             tableView.dataSource = self
             view.addSubview(tableView)
-            let nextButton = UIButton(frame: CGRect(x: 0,y: 0,width: 100,height:100))
-            nextButton.setTitle("Go!", for: .normal)
-            nextButton.backgroundColor = .blue
-            nextButton.addTarget(self, action: #selector(ViewController.goNext(_:)), for: .touchUpInside)
-            view.addSubview(nextButton)
+//            let nextButton = UIButton(frame: CGRect(x: 0,y: 0,width: 100,height:100))
+//            nextButton.setTitle("Go!", for: .normal)
+//            nextButton.backgroundColor = .blue
+//            nextButton.addTarget(self, action: #selector(ViewController.goNext(_:)), for: .touchUpInside)
+//            view.addSubview(nextButton)
         }
         
         Connpass.fetchEvent(completion: { (resultsfields) in
@@ -63,19 +66,19 @@ class ViewController: UIViewController {
         })
         
     }
+    
 
-    @objc func goNext(_ sender: UIButton) {
-        let nextvc = NextViewController()
-        nextvc.view.backgroundColor = UIColor.blue
-        self.present(nextvc, animated: true, completion: nil)
-    }
+//    @objc func goNext(_ sender: UIButton) {
+//        let nextvc = NextViewController()
+//        nextvc.view.backgroundColor = UIColor.blue
+//        self.present(nextvc, animated: true, completion: nil)
+//    }
 
 }
 
 extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
@@ -85,5 +88,20 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
+    }
+    
+}
+extension ViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let nextvc = NextViewController()
+        let resultsfield = resultsfields.events[indexPath.row]
+        // NextViewControllerに渡す文字列をセット
+        NextText = resultsfield.title
+        NextUrl = resultsfield.event_url
+        // NextViewControllerへ遷移する
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.present(nextvc, animated: true, completion: nil)
+        //もしくはself.present(NextViewController(), animated: true, completion: nil)
     }
 }

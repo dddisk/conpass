@@ -7,7 +7,7 @@ class NextViewController: UIViewController {
         
         let backButton = UIButton(frame: CGRect(x: 0,y: 0,width: 100,height:100))
         backButton.setTitle("back！", for: .normal)
-        backButton.backgroundColor = .white
+        backButton.backgroundColor = UIColor.white
         backButton.addTarget(self, action: #selector(NextViewController.back(_:)), for: .touchUpInside)
         view.addSubview(backButton)
     }
