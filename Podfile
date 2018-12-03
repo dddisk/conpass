@@ -7,6 +7,7 @@ target 'conpass' do
 
     pod 'RxSwift'
     pod 'RxCocoa'
+    pod 'SnapKit'
   # Pods for conpass
 
   target 'conpassTests' do

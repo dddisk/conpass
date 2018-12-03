@@ -1,5 +1,9 @@
 import UIKit
 import SafariServices
+import RxSwift
+import RxCocoa
+import SnapKit
+
 
 struct Resultsfield: Codable {
     var events: [Events]
@@ -10,7 +14,7 @@ struct Resultsfield: Codable {
 }
 
 struct Connpass {
-    
+    //@escapingの概要　https://qiita.com/ottijp/items/e45b65263c53037af1ee
     static func fetchEvent(completion: @escaping (Resultsfield) -> Swift.Void) {
         
         let url = "https://connpass.com/api/v1/event/?keyword=python"
@@ -21,10 +25,10 @@ struct Connpass {
             guard let jsonData = data else {
                 return
             }
-            
+
             do {
                 let resultsfields = try JSONDecoder().decode(Resultsfield.self, from: jsonData)
-                completion(resultsfields)
+                completion(resultsfields)                
             } catch {
                 print(error.localizedDescription)
             }
@@ -39,10 +43,8 @@ class ViewController: UIViewController {
     
     private var tableView = UITableView()
     var resultsfields: Resultsfield = Resultsfield(events: [])
-    var NextText: String?
-    var NextUrl: String?
-
-//  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
+    
+    //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
