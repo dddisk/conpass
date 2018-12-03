@@ -1,9 +1,5 @@
 import UIKit
 import SafariServices
-import RxSwift
-import RxCocoa
-import SnapKit
-
 
 struct Resultsfield: Codable {
     var events: [Events]
@@ -14,7 +10,7 @@ struct Resultsfield: Codable {
 }
 
 struct Connpass {
-    //@escapingの概要　https://qiita.com/ottijp/items/e45b65263c53037af1ee
+    //@escapingの概要 https://qiita.com/ottijp/items/e45b65263c53037af1ee
     static func fetchEvent(completion: @escaping (Resultsfield) -> Swift.Void) {
         
         let url = "https://connpass.com/api/v1/event/?keyword=python"
