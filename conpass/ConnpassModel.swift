@@ -2,9 +2,10 @@ import UIKit
 
 struct ConnpassModel {
     //@escapingの概要 https://qiita.com/ottijp/items/e45b65263c53037af1ee
-    static func fetchEvent(completion: @escaping (Resultsfield) -> Swift.Void) {
+    //voidは戻り値がないという意味
+    static func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
         
-        let url = "https://connpass.com/api/v1/event/?keyword=python"
+        let url = "https://connpass.com/api/v1/event/"
         
         let urlComponents = URLComponents(string: url)
         let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, response, error in
@@ -14,7 +15,7 @@ struct ConnpassModel {
             }
             
             do {
-                let resultsfields = try JSONDecoder().decode(Resultsfield.self, from: jsonData)
+                let resultsfields = try JSONDecoder().decode(ConnpassViewModel.self, from: jsonData)
                 completion(resultsfields)
             } catch {
                 print(error.localizedDescription)
