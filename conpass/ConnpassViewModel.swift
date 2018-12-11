@@ -6,9 +6,6 @@ struct ConnpassViewModel: Codable{
         var title: String
         var event_url: String
         var started_at: String
-        var ended_at: String
     }
 }
-
-
 

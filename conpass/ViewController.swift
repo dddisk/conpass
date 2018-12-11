@@ -1,14 +1,37 @@
 import UIKit
 import SafariServices
 
-class ViewController: UIViewController {
+class ViewController: UIViewController{
     private var tableView = UITableView()
     var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
-    //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
+    var searchBar = UISearchBar()
+    
+//  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchup()
         tableView.delegate = self
+
+//        func conpasssort = {(title: string, event_url: string, started_at: String) ->ConnpassViewModel
+//            title = "0"        }
         
+//        for i in Connpassall() {
+//            print("\(i)") // 0, 1, 2...
+//        }
+//        struct aaa:Sequence, IteratorProtocol {
+//            let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+//            for i in numbers {
+//            print("\(i)") // 0, 1, 2...
+//            }
+//        }
+        func tapButton(_ sender: UIButton) {
+            print("ボタンがタップされました！")
+        }
+        for i in 1...5 {
+            var sss:[Int] = []
+            sss.append(i)
+            print(sss)
+        }
         setUpTableView: do {
             tableView.frame = view.frame
             tableView.dataSource = self
@@ -22,6 +45,20 @@ class ViewController: UIViewController {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+//            print(resultsfields.events[0].title)
+//            print(resultsfields.events[3].started_at)
+            var  sss:[ConnpassViewModel.Events] = []
+            for i in resultsfields.events[0...9] {
+                sss.append(i)
+            }
+            let laa = sss[0].title
+            sss.sort(by: {$1.started_at < $0.started_at})
+            var ssss:[ConnpassViewModel.Events] = sss
+            print(ssss)
+            ssss.sort(by: {$0.started_at < $1.started_at})
+            print(ssss)
+            
+            
         })
 
     }
@@ -32,10 +69,10 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
-        print(resultsfield)
+//        var resultsfieldss = resultsfields.events[1]
+//        print(resultsfieldss)
+//        var sss:[String] = []
 //        var resultsort:[String] = [resultsfields.events.]
-        
-        
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.started_at
         return cell
@@ -58,35 +95,35 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
-//extension ViewController: UISearchBarDelegate {
-//    //https://qiita.com/Simmon/items/8760de60162068781278 参考
-//    func searchup(){
-//
-//        searchBar.delegate = self
-//        searchBar.frame = CGRect(x:0, y:0, width:self.view.frame.width, height:42)
-//        searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 89)
-//        searchBar.searchBarStyle = UISearchBar.Style.default
-//        searchBar.showsSearchResultsButton = false
-//        searchBar.placeholder = "検索"
-//        searchBar.setValue("キャンセル", forKey: "_cancelButtonText")
-//        tableView.tableHeaderView = searchBar
-//        print(searchBar.text)
-////        //searchBarの位置とサイズを設定
-////        searchBar.frame = CGRect(x:((self.view.bounds.width-320)/2),y:300,width:320,height:50)
-////        //薄文字の説明
-////        searchBar.placeholder = "ここに入力してください"
-////        //ViewにsearchBaroをSubViewとして追加
-////        self.view.addSubview(searchBar)
-//    }
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        self.view.endEditing(true)
-//        searchBar.showsCancelButton = true
-//        self.tableView.reloadData()
-//    }
-//
-//    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-//        searchBar.showsCancelButton = true
-//        return true
-//    }
-//
-//}
+extension ViewController: UISearchBarDelegate {
+    //https://qiita.com/Simmon/items/8760de60162068781278 参考
+    //    http://blue-bear.jp/kb/swift4-tableview%E3%81%ABuisearchbar%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B/
+    func searchup(){
+        searchBar.delegate = self
+        searchBar.frame = CGRect(x:0, y:0, width:self.view.frame.width, height:42)
+        searchBar.layer.position = CGPoint(x: self.view.bounds.width/2, y: 89)
+        searchBar.searchBarStyle = UISearchBar.Style.default
+        searchBar.showsSearchResultsButton = false
+        searchBar.placeholder = "検索"
+        searchBar.setValue("キャンセル", forKey: "_cancelButtonText")
+        tableView.tableHeaderView = searchBar
+        print(searchBar.text)
+//        //searchBarの位置とサイズを設定
+//        searchBar.frame = CGRect(x:((self.view.bounds.width-320)/2),y:300,width:320,height:50)
+//        //薄文字の説明
+//        searchBar.placeholder = "ここに入力してください"
+//        //ViewにsearchBaroをSubViewとして追加
+//        self.view.addSubview(searchBar)
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.view.endEditing(true)
+        searchBar.showsCancelButton = true
+        self.tableView.reloadData()
+    }
+
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.showsCancelButton = true
+        return true
+    }
+
+}
