@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2441AA5F21B513BF00A84377 /* ConnpassModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2441AA5E21B513BF00A84377 /* ConnpassModel.swift */; };
+		2441AA6121B5162F00A84377 /* ConnpassViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2441AA6021B5162F00A84377 /* ConnpassViewModel.swift */; };
 		24AF73812184171D00A65404 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF73802184171D00A65404 /* AppDelegate.swift */; };
 		24AF73832184171D00A65404 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF73822184171D00A65404 /* ViewController.swift */; };
 		24AF73862184171D00A65404 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24AF73842184171D00A65404 /* Main.storyboard */; };
@@ -38,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		14A1596FB558D3AA3F988A64 /* Pods-conpass.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-conpass.release.xcconfig"; path = "Pods/Target Support Files/Pods-conpass/Pods-conpass.release.xcconfig"; sourceTree = "<group>"; };
+		2441AA5E21B513BF00A84377 /* ConnpassModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnpassModel.swift; sourceTree = "<group>"; };
+		2441AA6021B5162F00A84377 /* ConnpassViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnpassViewModel.swift; sourceTree = "<group>"; };
 		24AF737D2184171D00A65404 /* conpass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = conpass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24AF73802184171D00A65404 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24AF73822184171D00A65404 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -116,6 +120,8 @@
 			children = (
 				24AF73802184171D00A65404 /* AppDelegate.swift */,
 				24AF73822184171D00A65404 /* ViewController.swift */,
+				2441AA5E21B513BF00A84377 /* ConnpassModel.swift */,
+				2441AA6021B5162F00A84377 /* ConnpassViewModel.swift */,
 				24AF73842184171D00A65404 /* Main.storyboard */,
 				24AF73872184171E00A65404 /* Assets.xcassets */,
 				24AF73892184171E00A65404 /* LaunchScreen.storyboard */,
@@ -398,7 +404,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				24AF73832184171D00A65404 /* ViewController.swift in Sources */,
+				2441AA5F21B513BF00A84377 /* ConnpassModel.swift in Sources */,
 				24AF73812184171D00A65404 /* AppDelegate.swift in Sources */,
+				2441AA6121B5162F00A84377 /* ConnpassViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
