@@ -3,30 +3,15 @@ import SafariServices
 
 class ViewController: UIViewController{
     private var tableView = UITableView()
+    private var mySystemButton: UIButton!
     var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
     var searchBar = UISearchBar()
     
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchup()
-        tableView.delegate = self
 
-//        func conpasssort = {(title: string, event_url: string, started_at: String) ->ConnpassViewModel
-//            title = "0"        }
-        
-//        for i in Connpassall() {
-//            print("\(i)") // 0, 1, 2...
-//        }
-//        struct aaa:Sequence, IteratorProtocol {
-//            let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-//            for i in numbers {
-//            print("\(i)") // 0, 1, 2...
-//            }
-//        }
-        func tapButton(_ sender: UIButton) {
-            print("ボタンがタップされました！")
-        }
+        tableView.delegate = self
         for i in 1...5 {
             var sss:[Int] = []
             sss.append(i)
@@ -45,22 +30,11 @@ class ViewController: UIViewController{
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-//            print(resultsfields.events[0].title)
-//            print(resultsfields.events[3].started_at)
-            var  sss:[ConnpassViewModel.Events] = []
-            for i in resultsfields.events[0...9] {
-                sss.append(i)
-            }
-            let laa = sss[0].title
-            sss.sort(by: {$1.started_at < $0.started_at})
-            var ssss:[ConnpassViewModel.Events] = sss
-            print(ssss)
-            ssss.sort(by: {$0.started_at < $1.started_at})
-            print(ssss)
-            
-            
         })
 
+    }
+    @objc func buttonEvent(_ sender: UIButton) {
+        print("ボタンの情報: \(sender)")
     }
 }
 
@@ -69,13 +43,22 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
-//        var resultsfieldss = resultsfields.events[1]
-//        print(resultsfieldss)
-//        var sss:[String] = []
-//        var resultsort:[String] = [resultsfields.events.]
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.started_at
         return cell
+    }
+    
+    func sort() {
+        var  sss:[ConnpassViewModel.Events] = []
+        for i in resultsfields.events[0...9] {
+            sss.append(i)
+        }
+        sss.sort(by: {$1.started_at < $0.started_at})
+        var ssss:[ConnpassViewModel.Events] = sss
+        print(ssss)
+        ssss.sort(by: {$0.started_at < $1.started_at})
+        print(ssss)
+        
     }
     
 
@@ -93,6 +76,8 @@ extension ViewController: UITableViewDelegate {
         let safariVC = SFSafariViewController(url: NSURL(string: webPage)! as URL)
         present(safariVC, animated: true, completion: nil)
     }
+    
+    
 }
 
 extension ViewController: UISearchBarDelegate {
