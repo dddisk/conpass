@@ -5,20 +5,43 @@ class ViewController: UIViewController{
     private var tableView = UITableView()
     private var mySystemButton: UIButton!
     var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
-    var leftBarButton: UIBarButtonItem!
     var searchBar: UISearchBar!
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("ss")
         setupSearchBar()
-        
         tableView.delegate = self
-        setUpTableView: do {
-            tableView.frame = view.frame
-            tableView.dataSource = self
-            view.addSubview(tableView)
-        }
+        tableView.frame = view.frame
+        //場所を変えると表示されない？？
+        tableView.dataSource = self
+        view.addSubview(tableView)
 
+    }    
+}
+
+extension ViewController: UISearchBarDelegate {
+    func setupSearchBar() {
+        if let navigationBarFrame = navigationController?.navigationBar.bounds {
+            let searchBar: UISearchBar = UISearchBar(frame: navigationBarFrame)
+            searchBar.delegate = self
+            searchBar.placeholder = "URLまたは検索ワード"
+            // UINavigationBar上に、UISearchBarを追加
+            navigationItem.titleView = searchBar
+            navigationItem.titleView?.frame = searchBar.frame
+            self.searchBar = searchBar
+        }
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // ソフトウェアキーボードの検索ボタンが押された
+        search(urlString: searchBar.text!)
+        // キーボードを閉じる
+        searchBar.resignFirstResponder()
+    }
+    
+    func search(urlString:String )
+    {
+        var urlString = urlString
         ConnpassModel.fetchEvent(completion: { (resultsfields) in
             self.resultsfields = resultsfields
             //https://1000ch.net/posts/2016/dispatch-queue.html
@@ -27,28 +50,7 @@ class ViewController: UIViewController{
                 self.tableView.reloadData()
             }
         })
-
-    }
-    // ボタンをタップしたときのアクション
-    @objc func tappedLeftBarButton() {
-        let previousPage = PreviousViewController()
-        self.navigationController?.pushViewController(previousPage, animated: true)
-    }
-    
-}
-
-extension ViewController: UISearchBarDelegate {
-    func setupSearchBar() {
-        if let navigationBarFrame = navigationController?.navigationBar.bounds {
-            let searchBar: UISearchBar = UISearchBar(frame: navigationBarFrame)
-            searchBar.delegate = self as! UISearchBarDelegate
-            searchBar.placeholder = "タイトルで探す"
-            searchBar.tintColor = UIColor.gray
-            searchBar.keyboardType = UIKeyboardType.default
-            navigationItem.titleView = searchBar
-            navigationItem.titleView?.frame = searchBar.frame
-            self.searchBar = searchBar
-        }
+        print(urlString)
     }
 }
 
