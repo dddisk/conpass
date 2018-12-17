@@ -3,13 +3,12 @@ import SafariServices
 
 class ViewController: UIViewController{
     private var tableView = UITableView()
-    private var mySystemButton: UIButton!
     var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
     var searchBar: UISearchBar!
+    var keyword:String!
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("ss")
         setupSearchBar()
         tableView.delegate = self
         tableView.frame = view.frame
@@ -34,35 +33,56 @@ extension ViewController: UISearchBarDelegate {
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ソフトウェアキーボードの検索ボタンが押された
-        search(urlString: searchBar.text!)
+        searchurl(urlString: searchBar.text!)
         // キーボードを閉じる
         searchBar.resignFirstResponder()
     }
     
-    func search(urlString:String )
+    func searchurl(urlString: String)
     {
-        var urlString = urlString
-        ConnpassModel.fetchEvent(completion: { (resultsfields) in
+        self.keyword = urlString
+        fetchEvent(completion: { (resultsfields) in
             self.resultsfields = resultsfields
+            //https://qiita.com/narukun/items/b1b6ec856aee42767694
             //https://1000ch.net/posts/2016/dispatch-queue.html
             //https://qiita.com/mag4n/items/bcdf1e88794317cf8c9c 古いけど使える
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+            
         })
-        print(urlString)
+        
+    }
+    func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
+        let url = "https://connpass.com/api/v1/event/?keyword=\(keyword!)"
+        print(keyword)
+        let urlComponents = URLComponents(string: url)
+        let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, response, error in
+            guard let jsonData = data else {
+                return
+            }
+            do {
+                let resultsfields = try JSONDecoder().decode(ConnpassViewModel.self, from: jsonData)
+                completion(resultsfields)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        task.resume()
     }
 }
 
 
-extension ViewController: UITableViewDataSource {
 
+
+extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.event_url
         return cell
+        
     }
     
     func sort() {
