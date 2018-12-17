@@ -101,7 +101,7 @@ extension ViewController: UITableViewDataSource {
             print(sss)
         }
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
     }
