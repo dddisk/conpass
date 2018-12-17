@@ -54,9 +54,13 @@ extension ViewController: UISearchBarDelegate {
         
     }
     func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
-        let url = "https://connpass.com/api/v1/event/?keyword=\(keyword!)"
-        print(keyword)
-        let urlComponents = URLComponents(string: url)
+        let urls = "https://connpass.com/api/v1/event/"
+        var urlComponents = URLComponents(string: urls)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "keyword", value: keyword),
+        ]
+        //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
+        let url = urlComponents?.url
         let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, response, error in
             guard let jsonData = data else {
                 return
@@ -72,9 +76,6 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 
-
-
-
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
@@ -82,7 +83,6 @@ extension ViewController: UITableViewDataSource {
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.event_url
         return cell
-        
     }
     
     func sort() {
