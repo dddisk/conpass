@@ -28,6 +28,7 @@ extension ViewController: UISearchBarDelegate {
             // UINavigationBar上に、UISearchBarを追加
             navigationItem.titleView = searchBar
             navigationItem.titleView?.frame = searchBar.frame
+            
             self.searchBar = searchBar
         }
     }
@@ -54,8 +55,8 @@ extension ViewController: UISearchBarDelegate {
         
     }
     func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
-        let urls = "https://connpass.com/api/v1/event/"
-        var urlComponents = URLComponents(string: urls)
+        let connpassApiUrl = "https://connpass.com/api/v1/event/"
+        var urlComponents = URLComponents(string: connpassApiUrl)
         urlComponents?.queryItems = [
             URLQueryItem(name: "keyword", value: keyword),
         ]
@@ -92,14 +93,7 @@ extension ViewController: UITableViewDataSource {
         }
         sss.sort(by: {$1.started_at < $0.started_at})
         var ssss:[ConnpassViewModel.Events] = sss
-        print(ssss)
         ssss.sort(by: {$0.started_at < $1.started_at})
-        print(ssss)
-        for i in 1...5 {
-            var sss:[Int] = []
-            sss.append(i)
-            print(sss)
-        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
