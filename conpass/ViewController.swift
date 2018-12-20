@@ -3,6 +3,7 @@ import SafariServices
 
 class ViewController: UIViewController{
     private var tableView = UITableView()
+    var baseview = UIView()
     var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
     var searchBar: UISearchBar!
     var keyword:String!
@@ -11,11 +12,17 @@ class ViewController: UIViewController{
         super.viewDidLoad()
         setupSearchBar()
         tableView.delegate = self
-        tableView.frame = view.frame
+        baseview.frame = view.frame
+        baseview.backgroundColor = UIColor.red
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         //場所を変えると表示されない？？
         tableView.dataSource = self
+        view.addSubview(baseview)
         view.addSubview(tableView)
-
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10.0).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
     }    
 }
 
