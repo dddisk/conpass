@@ -36,7 +36,41 @@ extension ViewController: UISearchBarDelegate {
             navigationItem.titleView = searchBar
             navigationItem.titleView?.frame = searchBar.frame
             self.searchBar = searchBar
+            let AscButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
+            let DescButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
+            self.navigationItem.setRightBarButtonItems([AscButton,DescButton], animated: true)
         }
+    }
+    @objc func AscButtonTapped(sender: UIButton){
+        print("asc")
+        var  sss:[ConnpassViewModel.Events] = []
+        for i in resultsfields.events[0...9] {
+            sss.append(i)
+        }
+        sss.sort(by: {$0.started_at < $1.started_at})
+        print(sss)
+    }
+    @objc func DescButtonTapped(sender: UIButton) {
+        print("desc")
+        var  sss:[ConnpassViewModel.Events] = []
+        for i in resultsfields.events[0...9] {
+            sss.append(i)
+        }
+        sss.sort(by: {$1.started_at < $0.started_at})
+        print(sss)
+        self.tableView.reloadData()
+    }
+    func searchButtonTapped() {
+        var  sss:[ConnpassViewModel.Events] = []
+        for i in resultsfields.events[0...9] {
+            sss.append(i)
+        }
+        sss.sort(by: {$1.started_at < $0.started_at})
+        var ssss:[ConnpassViewModel.Events] = sss
+        ssss.sort(by: {$0.started_at < $1.started_at})
+        print("asc")
+        print(ssss)
+        self.tableView.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ソフトウェアキーボードの検索ボタンが押された
@@ -87,15 +121,15 @@ extension ViewController: UITableViewDataSource {
         cell.detailTextLabel?.text = resultsfield.event_url
         return cell
     }
-//    func sort() {
-//        var  sss:[ConnpassViewModel.Events] = []
-//        for i in resultsfields.events[0...9] {
-//            sss.append(i)
-//        }
-//        testsss.sort(by: {$1.started_at < $0.started_at})
-//        var ssss:[ConnpassViewModel.Events] = testsss
-//        ssss.sort(by: {$0.started_at < $1.started_at})
-//    }
+    func sort() {
+        var  sss:[ConnpassViewModel.Events] = []
+        for i in resultsfields.events[0...9] {
+            sss.append(i)
+        }
+        sss.sort(by: {$1.started_at < $0.started_at})
+        var ssss:[ConnpassViewModel.Events] = sss
+        ssss.sort(by: {$0.started_at < $1.started_at})
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
