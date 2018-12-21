@@ -58,7 +58,7 @@ extension ViewController: UISearchBarDelegate {
         }
         sss.sort(by: {$1.started_at < $0.started_at})
         print(sss)
-        self.tableView.reloadData()
+        
     }
     func searchButtonTapped() {
         var  sss:[ConnpassViewModel.Events] = []
