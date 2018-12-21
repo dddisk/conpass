@@ -1,12 +1,12 @@
 import UIKit
 import SafariServices
 
-class ViewController: UIViewController{
+class ViewController: UIViewController {
     private var tableView = UITableView()
     var baseview = UIView()
     var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
     var searchBar: UISearchBar!
-    var keyword:String!
+    var keyword: String!
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +23,7 @@ class ViewController: UIViewController{
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
-    }    
+    }
 }
 
 extension ViewController: UISearchBarDelegate {
@@ -35,7 +35,6 @@ extension ViewController: UISearchBarDelegate {
             // UINavigationBar上に、UISearchBarを追加
             navigationItem.titleView = searchBar
             navigationItem.titleView?.frame = searchBar.frame
-            
             self.searchBar = searchBar
         }
     }
@@ -45,9 +44,7 @@ extension ViewController: UISearchBarDelegate {
         // キーボードを閉じる
         searchBar.resignFirstResponder()
     }
-    
-    func searchurl(urlString: String)
-    {
+    func searchurl(urlString: String) {
         self.keyword = urlString
         fetchEvent(completion: { (resultsfields) in
             self.resultsfields = resultsfields
@@ -57,15 +54,13 @@ extension ViewController: UISearchBarDelegate {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            
         })
-        
     }
     func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
         let connpassApiUrl = "https://connpass.com/api/v1/event/"
         var urlComponents = URLComponents(string: connpassApiUrl)
         urlComponents?.queryItems = [
-            URLQueryItem(name: "keyword", value: keyword),
+            URLQueryItem(name: "keyword", value: keyword)
         ]
         //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
         let url = urlComponents?.url
@@ -92,16 +87,15 @@ extension ViewController: UITableViewDataSource {
         cell.detailTextLabel?.text = resultsfield.event_url
         return cell
     }
-    
-    func sort() {
-        var  sss:[ConnpassViewModel.Events] = []
-        for i in resultsfields.events[0...9] {
-            sss.append(i)
-        }
-        sss.sort(by: {$1.started_at < $0.started_at})
-        var ssss:[ConnpassViewModel.Events] = sss
-        ssss.sort(by: {$0.started_at < $1.started_at})
-    }
+//    func sort() {
+//        var  sss:[ConnpassViewModel.Events] = []
+//        for i in resultsfields.events[0...9] {
+//            sss.append(i)
+//        }
+//        testsss.sort(by: {$1.started_at < $0.started_at})
+//        var ssss:[ConnpassViewModel.Events] = testsss
+//        ssss.sort(by: {$0.started_at < $1.started_at})
+//    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count

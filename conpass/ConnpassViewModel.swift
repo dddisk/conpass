@@ -1,6 +1,6 @@
 import UIKit
 
-struct ConnpassViewModel: Codable{
+struct ConnpassViewModel: Codable {
     var events: [Events]
     struct Events: Codable {
         var title: String
@@ -8,4 +8,3 @@ struct ConnpassViewModel: Codable{
         var started_at: String
     }
 }
-

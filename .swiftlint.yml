@@ -1,0 +1,13 @@
+# 無効にするルール
+disabled_rules:
+  - identifier_name
+  - line_length
+# 対象のファイル・フォルダ
+# デフォルトからフォルダ名を変更していない場合、プロジェクト名と同名のフォルダを指定すればいい
+included:
+  - conpass
+
+# 対象外のファイル・フォルダ
+# CocoaPodsでインストールしたライブラリは対象外とする
+excluded:
+  - Pods
