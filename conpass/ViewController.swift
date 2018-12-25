@@ -49,6 +49,8 @@ extension ViewController: UISearchBarDelegate {
         }
         sss.sort(by: {$0.started_at < $1.started_at})
         print(sss)
+        resultsfields.events = sss
+        tableView.reloadData()
     }
     @objc func DescButtonTapped(sender: UIButton) {
         print("desc")
@@ -58,6 +60,8 @@ extension ViewController: UISearchBarDelegate {
         }
         sss.sort(by: {$1.started_at < $0.started_at})
         print(sss)
+        resultsfields.events = sss
+        tableView.reloadData()
         
     }
     func searchButtonTapped() {
