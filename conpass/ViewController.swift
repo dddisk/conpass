@@ -19,10 +19,33 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         view.addSubview(baseview)
         view.addSubview(tableView)
+        let AscButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
+        let DescButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
+        self.navigationItem.setRightBarButtonItems([AscButton, DescButton], animated: true)
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10.0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
+    }
+    @objc func AscButtonTapped(sender: UIButton) {
+        if resultsfields.events.isEmpty {
+            print("no asc data")
+        } else {
+            resultsfields.events.sort(by: {$0.startedAt < $1.startedAt})
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    @objc func DescButtonTapped(sender: UIButton) {
+        if resultsfields.events.isEmpty {
+            print("no desc data")
+        } else {
+            resultsfields.events.sort(by: {$1.startedAt < $0.startedAt})
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 }
 
@@ -64,7 +87,7 @@ extension ViewController: UISearchBarDelegate {
         ]
         //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
         let url = urlComponents?.url
-        let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, response, error in
+        let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, _, error in
             guard let jsonData = data else {
                 return
             }
@@ -84,18 +107,9 @@ extension ViewController: UITableViewDataSource {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
-        cell.detailTextLabel?.text = resultsfield.event_url
+        cell.detailTextLabel?.text = resultsfield.startedAt
         return cell
     }
-//    func sort() {
-//        var  sss:[ConnpassViewModel.Events] = []
-//        for i in resultsfields.events[0...9] {
-//            sss.append(i)
-//        }
-//        testsss.sort(by: {$1.started_at < $0.started_at})
-//        var ssss:[ConnpassViewModel.Events] = testsss
-//        ssss.sort(by: {$0.started_at < $1.started_at})
-//    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
@@ -105,7 +119,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let resultsfield = resultsfields.events[indexPath.row]
-        let webPage = resultsfield.event_url
+        let webPage = resultsfield.eventUrl
         let safariVC = SFSafariViewController(url: NSURL(string: webPage)! as URL)
         present(safariVC, animated: true, completion: nil)
     }
