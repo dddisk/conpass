@@ -23,6 +23,9 @@ class ViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
+        let AscButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
+        let DescButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
+        self.navigationItem.setRightBarButtonItems([AscButton,DescButton], animated: true)
     }
 }
 
@@ -36,45 +39,15 @@ extension ViewController: UISearchBarDelegate {
             navigationItem.titleView = searchBar
             navigationItem.titleView?.frame = searchBar.frame
             self.searchBar = searchBar
-            let AscButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
-            let DescButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
-            self.navigationItem.setRightBarButtonItems([AscButton,DescButton], animated: true)
         }
     }
-    @objc func AscButtonTapped(sender: UIButton){
-        print("asc")
-        var  sss:[ConnpassViewModel.Events] = []
-        for i in resultsfields.events[0...9] {
-            sss.append(i)
-        }
-        sss.sort(by: {$0.started_at < $1.started_at})
-        print(sss)
-        resultsfields.events = sss
+    @objc func AscButtonTapped(sender: UIButton) {
+        resultsfields.events.sort(by: {$0.started_at < $1.started_at})
         tableView.reloadData()
     }
     @objc func DescButtonTapped(sender: UIButton) {
-        print("desc")
-        var  sss:[ConnpassViewModel.Events] = []
-        for i in resultsfields.events[0...9] {
-            sss.append(i)
-        }
-        sss.sort(by: {$1.started_at < $0.started_at})
-        print(sss)
-        resultsfields.events = sss
+        resultsfields.events.sort(by: {$1.started_at < $0.started_at})
         tableView.reloadData()
-        
-    }
-    func searchButtonTapped() {
-        var  sss:[ConnpassViewModel.Events] = []
-        for i in resultsfields.events[0...9] {
-            sss.append(i)
-        }
-        sss.sort(by: {$1.started_at < $0.started_at})
-        var ssss:[ConnpassViewModel.Events] = sss
-        ssss.sort(by: {$0.started_at < $1.started_at})
-        print("asc")
-        print(ssss)
-        self.tableView.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ソフトウェアキーボードの検索ボタンが押された
@@ -118,21 +91,13 @@ extension ViewController: UISearchBarDelegate {
 }
 
 extension ViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
-        cell.detailTextLabel?.text = resultsfield.event_url
+        cell.detailTextLabel?.text = resultsfield.started_at
         return cell
-    }
-    func sort() {
-        var  sss:[ConnpassViewModel.Events] = []
-        for i in resultsfields.events[0...9] {
-            sss.append(i)
-        }
-        sss.sort(by: {$1.started_at < $0.started_at})
-        var ssss:[ConnpassViewModel.Events] = sss
-        ssss.sort(by: {$0.started_at < $1.started_at})
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
