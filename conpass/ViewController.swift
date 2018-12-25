@@ -87,7 +87,7 @@ extension ViewController: UITableViewDataSource {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
-        cell.detailTextLabel?.text = resultsfield.started_at
+        cell.detailTextLabel?.text = resultsfield.startedAt
         return cell
     }
 
@@ -98,7 +98,7 @@ extension ViewController: UITableViewDataSource {
         if resultsfields.events.isEmpty {
             print("no asc data")
         } else {
-            resultsfields.events.sort(by: {$0.started_at < $1.started_at})
+            resultsfields.events.sort(by: {$0.startedAt < $1.startedAt})
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -108,7 +108,7 @@ extension ViewController: UITableViewDataSource {
         if resultsfields.events.isEmpty {
             print("no desc data")
         } else {
-            resultsfields.events.sort(by: {$1.started_at < $0.started_at})
+            resultsfields.events.sort(by: {$1.startedAt < $0.startedAt})
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -119,7 +119,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let resultsfield = resultsfields.events[indexPath.row]
-        let webPage = resultsfield.event_url
+        let webPage = resultsfield.eventUrl
         let safariVC = SFSafariViewController(url: NSURL(string: webPage)! as URL)
         present(safariVC, animated: true, completion: nil)
     }
