@@ -19,13 +19,13 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         view.addSubview(baseview)
         view.addSubview(tableView)
+        let AscButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
+        let DescButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
+        self.navigationItem.setRightBarButtonItems([AscButton,DescButton], animated: true)
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10.0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
-        let AscButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
-        let DescButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
-        self.navigationItem.setRightBarButtonItems([AscButton,DescButton], animated: true)
     }
 }
 
@@ -40,14 +40,6 @@ extension ViewController: UISearchBarDelegate {
             navigationItem.titleView?.frame = searchBar.frame
             self.searchBar = searchBar
         }
-    }
-    @objc func AscButtonTapped(sender: UIButton) {
-        resultsfields.events.sort(by: {$0.started_at < $1.started_at})
-        tableView.reloadData()
-    }
-    @objc func DescButtonTapped(sender: UIButton) {
-        resultsfields.events.sort(by: {$1.started_at < $0.started_at})
-        tableView.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ソフトウェアキーボードの検索ボタンが押された
@@ -91,7 +83,6 @@ extension ViewController: UISearchBarDelegate {
 }
 
 extension ViewController: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
         let resultsfield = resultsfields.events[indexPath.row]
@@ -102,6 +93,26 @@ extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
+    }
+    @objc func AscButtonTapped(sender: UIButton) {
+        if resultsfields.events.isEmpty {
+            print("no asc data")
+        } else {
+            resultsfields.events.sort(by: {$0.started_at < $1.started_at})
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    @objc func DescButtonTapped(sender: UIButton) {
+        if resultsfields.events.isEmpty {
+            print("no desc data")
+        } else {
+            resultsfields.events.sort(by: {$1.started_at < $0.started_at})
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 }
 
