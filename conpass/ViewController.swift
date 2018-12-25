@@ -27,6 +27,26 @@ class ViewController: UIViewController {
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
     }
+    @objc func AscButtonTapped(sender: UIButton) {
+        if resultsfields.events.isEmpty {
+            print("no asc data")
+        } else {
+            resultsfields.events.sort(by: {$0.startedAt < $1.startedAt})
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    @objc func DescButtonTapped(sender: UIButton) {
+        if resultsfields.events.isEmpty {
+            print("no desc data")
+        } else {
+            resultsfields.events.sort(by: {$1.startedAt < $0.startedAt})
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
 }
 
 extension ViewController: UISearchBarDelegate {
@@ -67,7 +87,7 @@ extension ViewController: UISearchBarDelegate {
         ]
         //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
         let url = urlComponents?.url
-        let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, response, error in
+        let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, _, error in
             guard let jsonData = data else {
                 return
             }
@@ -93,26 +113,6 @@ extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
-    }
-    @objc func AscButtonTapped(sender: UIButton) {
-        if resultsfields.events.isEmpty {
-            print("no asc data")
-        } else {
-            resultsfields.events.sort(by: {$0.startedAt < $1.startedAt})
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
-    @objc func DescButtonTapped(sender: UIButton) {
-        if resultsfields.events.isEmpty {
-            print("no desc data")
-        } else {
-            resultsfields.events.sort(by: {$1.startedAt < $0.startedAt})
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
     }
 }
 
