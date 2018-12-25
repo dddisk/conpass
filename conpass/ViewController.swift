@@ -19,9 +19,9 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         view.addSubview(baseview)
         view.addSubview(tableView)
-        let AscButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
-        let DescButton:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
-        self.navigationItem.setRightBarButtonItems([AscButton,DescButton], animated: true)
+        let AscButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
+        let DescButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
+        self.navigationItem.setRightBarButtonItems([AscButton, DescButton], animated: true)
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10.0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
