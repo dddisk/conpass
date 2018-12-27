@@ -81,6 +81,10 @@ extension ViewController: UISearchBarDelegate {
     }
     func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
         let connpassApiUrl = "https://connpass.com/api/v1/event/"
+        let dateFormater = DateFormatter()
+        dateFormater.locale = Locale(identifier: "ja_JP")
+        dateFormater.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        let date = dateFormater.string(from: Date())
         var urlComponents = URLComponents(string: connpassApiUrl)
         urlComponents?.queryItems = [
             URLQueryItem(name: "keyword", value: keyword)
@@ -92,7 +96,8 @@ extension ViewController: UISearchBarDelegate {
                 return
             }
             do {
-                let resultsfields = try JSONDecoder().decode(ConnpassViewModel.self, from: jsonData)
+                var resultsfields = try JSONDecoder().decode(ConnpassViewModel.self, from: jsonData)
+                resultsfields.events = resultsfields.events.filter { $0.startedAt > date }
                 completion(resultsfields)
             } catch {
                 print(error.localizedDescription)
@@ -100,17 +105,25 @@ extension ViewController: UISearchBarDelegate {
         }
         task.resume()
     }
+
 }
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+        let dateFormater = DateFormatter()
+        dateFormater.locale = Locale(identifier: "ja_JP")
+        dateFormater.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        let date = dateFormater.string(from: Date())
+        if date > resultsfields.events[indexPath.row].startedAt {
+            print("削除")
+
+        }
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.startedAt
         return cell
     }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
     }
