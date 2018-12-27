@@ -111,19 +111,12 @@ extension ViewController: UISearchBarDelegate {
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        let dateFormater = DateFormatter()
-        dateFormater.locale = Locale(identifier: "ja_JP")
-        dateFormater.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        let date = dateFormater.string(from: Date())
-        if date > resultsfields.events[indexPath.row].startedAt {
-            print("削除")
-
-        }
         let resultsfield = resultsfields.events[indexPath.row]
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.startedAt
         return cell
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
     }
