@@ -1,16 +1,22 @@
 import UIKit
 import SafariServices
+import RxCocoa
+import RxSwift
 
 class ViewController: UIViewController {
     private var tableView = UITableView()
     var baseview = UIView()
-    var resultsfields: ConnpassViewModel = ConnpassViewModel(events: [])
+    var resultsfields: ConnpassStruct = ConnpassStruct(events: [])
     var searchBar: UISearchBar!
     var keyword: String!
+    var AscButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: nil, action: nil)
+    var DescButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: nil, action: nil)
+    private let disposeBag = DisposeBag()
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSearchBar()
+
         tableView.delegate = self
         baseview.frame = view.frame
         baseview.backgroundColor = UIColor.red
@@ -19,33 +25,36 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         view.addSubview(baseview)
         view.addSubview(tableView)
-        let AscButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: self, action: #selector(AscButtonTapped(sender:)))
-        let DescButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(DescButtonTapped(sender:)))
+        //https://fussan-blog.com/swift-uibarbuttonitem/
+        AscButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                if self!.resultsfields.events.isEmpty {
+                    print("no asc data")
+                } else {
+                    self!.resultsfields.events.sort(by: {$0.startedAt < $1.startedAt})
+                    DispatchQueue.main.async {
+                        self!.tableView.reloadData()
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+        DescButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                if self!.resultsfields.events.isEmpty {
+                    print("no desc data")
+                } else {
+                    self!.resultsfields.events.sort(by: {$1.startedAt < $0.startedAt})
+                    DispatchQueue.main.async {
+                        self!.tableView.reloadData()
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
         self.navigationItem.setRightBarButtonItems([AscButton, DescButton], animated: true)
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10.0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
-    }
-    @objc func AscButtonTapped(sender: UIButton) {
-        if resultsfields.events.isEmpty {
-            print("no asc data")
-        } else {
-            resultsfields.events.sort(by: {$0.startedAt < $1.startedAt})
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
-    @objc func DescButtonTapped(sender: UIButton) {
-        if resultsfields.events.isEmpty {
-            print("no desc data")
-        } else {
-            resultsfields.events.sort(by: {$1.startedAt < $0.startedAt})
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
     }
 }
 
@@ -79,7 +88,7 @@ extension ViewController: UISearchBarDelegate {
             }
         })
     }
-    func fetchEvent(completion: @escaping (ConnpassViewModel) -> Swift.Void) {
+    func fetchEvent(completion: @escaping (ConnpassStruct) -> Swift.Void) {
         let connpassApiUrl = "https://connpass.com/api/v1/event/"
         let dateFormater = DateFormatter()
         dateFormater.locale = Locale(identifier: "ja_JP")
@@ -96,7 +105,7 @@ extension ViewController: UISearchBarDelegate {
                 return
             }
             do {
-                var resultsfields = try JSONDecoder().decode(ConnpassViewModel.self, from: jsonData)
+                var resultsfields = try JSONDecoder().decode(ConnpassStruct.self, from: jsonData)
                 resultsfields.events = resultsfields.events.filter { $0.startedAt > date }
                 completion(resultsfields)
             } catch {
@@ -116,7 +125,7 @@ extension ViewController: UITableViewDataSource {
         cell.detailTextLabel?.text = resultsfield.startedAt
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resultsfields.events.count
     }

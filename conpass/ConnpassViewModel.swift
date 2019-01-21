@@ -1,6 +1,8 @@
+import RxSwift
+import RxCocoa
 import UIKit
 
-struct ConnpassViewModel: Codable {
+struct ConnpassStruct: Codable {
     var events: [Events]
     struct Events: Codable {
         var title: String
