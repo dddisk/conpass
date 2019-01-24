@@ -15,3 +15,8 @@ struct ConnpassStruct: Codable {
         }
     }
 }
+
+class ConnpassViewModel {
+    let connpassModel = ConnpassModel()
+}
+

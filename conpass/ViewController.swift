@@ -11,7 +11,9 @@ class ViewController: UIViewController {
     var keyword: String!
     var AscButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: nil, action: nil)
     var DescButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: nil, action: nil)
+    //rxから
     private let disposeBag = DisposeBag()
+    let connpassViewModel = ConnpassViewModel()
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,7 +80,7 @@ extension ViewController: UISearchBarDelegate {
     }
     func searchurl(urlString: String) {
         self.keyword = urlString
-        fetchEvent(completion: { (resultsfields) in
+        ConnpassModel.fetchEvent(completion: { (resultsfields) in
             self.resultsfields = resultsfields
             //https://qiita.com/narukun/items/b1b6ec856aee42767694
             //https://1000ch.net/posts/2016/dispatch-queue.html
@@ -88,33 +90,6 @@ extension ViewController: UISearchBarDelegate {
             }
         })
     }
-    func fetchEvent(completion: @escaping (ConnpassStruct) -> Swift.Void) {
-        let connpassApiUrl = "https://connpass.com/api/v1/event/"
-        let dateFormater = DateFormatter()
-        dateFormater.locale = Locale(identifier: "ja_JP")
-        dateFormater.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        let date = dateFormater.string(from: Date())
-        var urlComponents = URLComponents(string: connpassApiUrl)
-        urlComponents?.queryItems = [
-            URLQueryItem(name: "keyword", value: keyword)
-        ]
-        //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
-        let url = urlComponents?.url
-        let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, _, error in
-            guard let jsonData = data else {
-                return
-            }
-            do {
-                var resultsfields = try JSONDecoder().decode(ConnpassStruct.self, from: jsonData)
-                resultsfields.events = resultsfields.events.filter { $0.startedAt > date }
-                completion(resultsfields)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        task.resume()
-    }
-
 }
 
 extension ViewController: UITableViewDataSource {
