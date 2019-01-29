@@ -120,8 +120,8 @@
 			children = (
 				24AF73802184171D00A65404 /* AppDelegate.swift */,
 				24AF73822184171D00A65404 /* ViewController.swift */,
-				2441AA5E21B513BF00A84377 /* ConnpassModel.swift */,
 				2441AA6021B5162F00A84377 /* ConnpassViewModel.swift */,
+				2441AA5E21B513BF00A84377 /* ConnpassModel.swift */,
 				24AF73842184171D00A65404 /* Main.storyboard */,
 				24AF73872184171E00A65404 /* Assets.xcassets */,
 				24AF73892184171E00A65404 /* LaunchScreen.storyboard */,
