@@ -10,7 +10,7 @@ class ConnpassModel {
     var keyword: String!
     let resultsfields = BehaviorRelay<[ConnpassStruct.Events]>(value: [])
 
-    func fetchEvent(keyword) -> Single<[ConnpassStruct.Events]> {
+    func fetchEvent(keyword: String) -> Single<[ConnpassStruct.Events]> {
     return Single<[ConnpassStruct.Events]>.create { single in
         let connpassApiUrl = "https://connpass.com/api/v1/event/"
         let dateFormater = DateFormatter()
@@ -19,7 +19,7 @@ class ConnpassModel {
         let date = dateFormater.string(from: Date())
         var urlComponents = URLComponents(string: connpassApiUrl)
         urlComponents?.queryItems = [
-            URLQueryItem(name: "keyword", value: self.keyword)
+            URLQueryItem(name: "keyword", value: keyword)
         ]
         //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
         let url = urlComponents?.url

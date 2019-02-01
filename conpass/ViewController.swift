@@ -7,9 +7,9 @@ class ViewController: UIViewController {
     private var tableView = UITableView()
     var baseview = UIView()
     var resultsfields: ConnpassStruct = ConnpassStruct(events: [])
+    var viewModel: ConnpassViewModel!
     var searchBar: UISearchBar!
     var keyword: String!
-    var viewModel: ConnpassViewModel = ConnpassViewModel()
     //uibarbuttonitemのアイコンの種類　https://fussan-blog.com/swift-uibarbuttonitem/
     var ascButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fastForward, target: nil, action: nil)
     var descButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: nil, action: nil)
@@ -20,27 +20,30 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         setupSearchBar()
         setupTableview()
+//        let input = ConnpassViewModelInput (
+//            //https://qiita.com/k5n/items/44ef2ab400f47fb66731
+//            ascButton: ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
+//            descButton: descButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty())
+//        )
 
-        let input = ConnpassViewModelInput (
-            //https://qiita.com/k5n/items/44ef2ab400f47fb66731
+            self.viewModel = ConnpassViewModel(
+            searchKeyword: self.searchBar.rx.text.asDriver(),
             ascButton: ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
             descButton: descButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty())
         )
-        viewModel.setup(input: input)
-        input.ascButton.drive(onNext: { [weak self] in
+        viewModel.ascButton.drive(onNext: { [weak self] in
             print("test2")
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
-        })
-            .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
 
-        input.descButton.drive(onNext: { [weak self] in
+        viewModel.descButton.drive(onNext: { [weak self] in
             DispatchQueue.main.async {
             self?.tableView.reloadData()
             }
-        })
-            .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
+        //https://qiita.com/fumiyasac@github/items/da762ea512484a8291a3
     }
 
     func setupTableview() {
@@ -57,12 +60,12 @@ class ViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10.0).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10.0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0).isActive = true
-
     }
 
 }
 
 extension ViewController: UISearchBarDelegate {
+    //https://dev.classmethod.jp/smartphone/iphone/incremental-search-using-rxswift-and-rxcocoa/
     func setupSearchBar() {
         if let navigationBarFrame = navigationController?.navigationBar.bounds {
             let searchBar: UISearchBar = UISearchBar(frame: navigationBarFrame)
@@ -72,20 +75,23 @@ extension ViewController: UISearchBarDelegate {
             navigationItem.titleView = searchBar
             navigationItem.titleView?.frame = searchBar.frame
             self.searchBar = searchBar
-
+            self.keyword = searchBar.text
+            print(keyword)
         }
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // ソフトウェアキーボードの検索ボタンが押された
         searchurl(urlString: searchBar.text!)
+        //押されて通知する→mvに渡す(binding状態)→modelに渡して検索ワードをヒットさせる
         // キーボードを閉じる
         searchBar.resignFirstResponder()
     }
 
     func searchurl(urlString: String) {
+
         self.keyword = urlString
-        ConnpassModel.fetchEvent(searchText: self.keyword)
+//        ConnpassModel.fetchEvent()
 //        ConnpassModel.fetchEvent()
         //            self.resultsfields = resultsfields
         //https://qiita.com/narukun/items/b1b6ec856aee42767694
