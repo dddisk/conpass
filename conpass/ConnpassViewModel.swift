@@ -37,7 +37,6 @@ class ConnpassViewModel {
                 .subscribe(
                     onSuccess: {[weak self] resultsfields in
                         self?.resultsfields.accept(resultsfields)
-                        print(resultsfields)
                     },
                     onError: { error in
                         print(error)

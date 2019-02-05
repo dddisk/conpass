@@ -20,11 +20,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         setupTableview()
         setupSearchBar()
-//        let input = ConnpassViewModelInput (
-//            //https://qiita.com/k5n/items/44ef2ab400f47fb66731
-//            ascButton: ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
-//            descButton: descButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty())
-//        )
+
         self.viewModel = ConnpassViewModel(
         searchKeyword: self.searchBar.rx.text.asDriver(),
         ascButton: self.ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
@@ -93,30 +89,13 @@ extension ViewController: UISearchBarDelegate {
             navigationItem.titleView = searchBar
             navigationItem.titleView?.frame = searchBar.frame
             self.searchBar = searchBar
-            self.keyword = searchBar.text
-            print(keyword)
         }
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        // ソフトウェアキーボードの検索ボタンが押された
-        searchurl(urlString: searchBar.text!)
-        //押されて通知する→mvに渡す(binding状態)→modelに渡して検索ワードをヒットさせる
         // キーボードを閉じる
         searchBar.resignFirstResponder()
     }
-
-    func searchurl(urlString: String) {
-
-        self.keyword = urlString
-//        ConnpassModel.fetchEvent()
-//        ConnpassModel.fetchEvent()
-        //            self.resultsfields = resultsfields
-        //https://qiita.com/narukun/items/b1b6ec856aee42767694
-        //https://1000ch.net/posts/2016/dispatch-queue.html
-        //https://qiita.com/mag4n/items/bcdf1e88794317cf8c9c 古いけど使える
-    }
-
 }
 
 extension ViewController: UITableViewDataSource {

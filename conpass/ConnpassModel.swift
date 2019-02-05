@@ -35,7 +35,6 @@ class ConnpassModel {
         urlComponents?.queryItems = [
             URLQueryItem(name: "keyword", value: keyword)
         ]
-        print(keyword)
         //https://qiita.com/KosukeOhmura/items/8b65bdb63da6df95c7a3
         _ = urlComponents?.url
         let task = URLSession.shared.dataTask(with: (urlComponents?.url!)!) { data, _, error in
@@ -44,8 +43,7 @@ class ConnpassModel {
                 var resultsfields = try JSONDecoder().decode(ConnpassStruct.self, from: jsonData)
                 resultsfields.events = resultsfields.events.filter { $0.startedAt > date }
                 //https://qiita.com/mafmoff/items/7ffe707c2f3097b44297
-                print(resultsfields)
-                print(self.resultsfields)
+
                 self.resultsfields.accept(resultsfields.events)
                 single(.success(resultsfields.events))
 
