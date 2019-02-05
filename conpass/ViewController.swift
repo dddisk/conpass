@@ -31,27 +31,19 @@ class ViewController: UIViewController {
 
         self.viewModel.ascButton
             .drive(onNext: { [weak self] in
-            self?.resultsfields.sort(by: {$0.startedAt < $1.startedAt})
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
+                self?.tableView.reloadData()
             }).disposed(by: disposeBag)
 
         self.viewModel.descButton
             .drive(onNext: { [weak self] in
-                self?.resultsfields.sort(by: {$1.startedAt < $0.startedAt})
-                DispatchQueue.main.async {
                 self?.tableView.reloadData()
-                }
             }).disposed(by: disposeBag)
 
         self.viewModel.resultsfields
             .asDriver()
             .drive(onNext: { [weak self] resultsfields in
                 self?.resultsfields = resultsfields
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData()
-                    }
+                self?.tableView.reloadData()
             }).disposed(by: self.disposeBag)
 
         self.viewModel.searchKeyword

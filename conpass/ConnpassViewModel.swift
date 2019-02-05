@@ -22,20 +22,25 @@ class ConnpassViewModel {
         self.ascButton = ascButton
         self.descButton = descButton
         self.searchButton = searchButton
-        self.resultsfields = self.connpassModel.resultsfields
+
+        self.ascButton.drive(onNext: { _ in
+            let ascDate = self.resultsfields.value.sorted(by: {$0.startedAt < $1.startedAt})
+            self.resultsfields.accept(ascDate)
+        }).disposed(by: disposeBag)
+
+        self.descButton.drive(onNext: { _ in
+            let deskDate = self.resultsfields.value.sorted(by: {$1.startedAt < $0.startedAt})
+            self.resultsfields.accept(deskDate)
+        }).disposed(by: disposeBag)
 
         //https://qiita.com/mafmoff/items/7ffe707c2f3097b44297 値のアクセスはvalueを使う
-        self.searchButton.drive(onNext: { [weak self] in
-            self?.connpassModel.fetchEvent(keyword: self!.Keywords.value)
-                .subscribe(
-                    onSuccess: {[weak self] resultsfields in
-                        self?.resultsfields.accept(resultsfields)
-                    },
-                    onError: { error in
-                        print(error)
-                    }
-            )
-        }).disposed(by: disposeBag)
+        self.searchButton
+            .flatMapLatest { _ in
+                self.connpassModel.fetchEvent(keyword: self.Keywords.value)
+                    .asDriver(onErrorJustReturn: [])
+            }
+            .drive(resultsfields)
+            .disposed(by: disposeBag)
 
         self.searchKeyword.drive(onNext: { [weak self] keyword in
             self?.Keywords.accept(keyword!)

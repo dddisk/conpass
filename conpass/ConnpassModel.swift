@@ -22,7 +22,6 @@ class ConnpassModel {
     private let disposeBag = DisposeBag()
     var searchBar: UISearchBar!
     var keyword: String!
-    var resultsfields = BehaviorRelay<[ConnpassStruct.Events]>(value: [])
     //https://qiita.com/_ha1f/items/43b28792d27dbee7133d
     func fetchEvent(keyword: String) -> Single<[ConnpassStruct.Events]> {
     return Single<[ConnpassStruct.Events]>.create { single in
@@ -43,8 +42,6 @@ class ConnpassModel {
                 var resultsfields = try JSONDecoder().decode(ConnpassStruct.self, from: jsonData)
                 resultsfields.events = resultsfields.events.filter { $0.startedAt > date }
                 //https://qiita.com/mafmoff/items/7ffe707c2f3097b44297
-
-                self.resultsfields.accept(resultsfields.events)
                 single(.success(resultsfields.events))
 
             } catch {
