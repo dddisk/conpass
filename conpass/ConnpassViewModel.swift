@@ -24,13 +24,6 @@ class ConnpassViewModel {
         self.searchButton = searchButton
         self.resultsfields = self.connpassModel.resultsfields
 
-        self.ascButton.drive(onNext: { [weak self] in
-            self?.resultsfields
-        }).disposed(by: disposeBag)
-
-//        self.descButton.drive(onNext: { [weak self] in
-//            self?.resultsfields.value.sort(by: {$1.startedAt < $0.startedAt})
-//        }).disposed(by: disposeBag)
         //https://qiita.com/mafmoff/items/7ffe707c2f3097b44297 値のアクセスはvalueを使う
         self.searchButton.drive(onNext: { [weak self] in
             self?.connpassModel.fetchEvent(keyword: self!.Keywords.value)
