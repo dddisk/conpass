@@ -6,7 +6,7 @@ import RxSwift
 class ViewController: UIViewController {
     private var tableView = UITableView()
     var baseview = UIView()
-    var resultsfields: ConnpassStruct = ConnpassStruct(events: [])
+    var resultsfields = [ConnpassStruct.Events]()
     var viewModel: ConnpassViewModel!
     var searchBar: UISearchBar!
     var keyword: String!
@@ -18,31 +18,49 @@ class ViewController: UIViewController {
 //  起動時にviewDidLoadが呼ばれ、中の処理を走らせる
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupSearchBar()
         setupTableview()
+        setupSearchBar()
 //        let input = ConnpassViewModelInput (
 //            //https://qiita.com/k5n/items/44ef2ab400f47fb66731
 //            ascButton: ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
 //            descButton: descButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty())
 //        )
-
-            self.viewModel = ConnpassViewModel(
-            searchKeyword: self.searchBar.rx.text.asDriver(),
-            ascButton: ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
-            descButton: descButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty())
+        self.viewModel = ConnpassViewModel(
+        searchKeyword: self.searchBar.rx.text.asDriver(),
+        ascButton: self.ascButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
+        descButton: self.descButton.rx.tap.asDriver(onErrorDriveWith: Driver.empty()),
+        //https://github.com/ReactiveX/RxSwift/blob/master/Tests/RxCocoaTests/UISearchBar%2BRxTests.swift
+        searchButton: self.searchBar.rx.searchButtonClicked.asDriver()
         )
-        viewModel.ascButton.drive(onNext: { [weak self] in
-            print("test2")
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
-        }).disposed(by: disposeBag)
 
-        viewModel.descButton.drive(onNext: { [weak self] in
-            DispatchQueue.main.async {
-            self?.tableView.reloadData()
-            }
-        }).disposed(by: disposeBag)
+        self.viewModel.ascButton
+            .drive(onNext: { [weak self] in
+            self?.resultsfields.sort(by: {$0.startedAt < $1.startedAt})
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            }).disposed(by: disposeBag)
+
+        self.viewModel.descButton
+            .drive(onNext: { [weak self] in
+                self?.resultsfields.sort(by: {$1.startedAt < $0.startedAt})
+                DispatchQueue.main.async {
+                self?.tableView.reloadData()
+                }
+            }).disposed(by: disposeBag)
+
+        self.viewModel.resultsfields
+            .asDriver()
+            .drive(onNext: { [weak self] resultsfields in
+                self?.resultsfields = resultsfields
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                    }
+            }).disposed(by: self.disposeBag)
+
+        self.viewModel.searchKeyword
+            .drive(self.searchBar.rx.text)
+            .disposed(by: disposeBag)
         //https://qiita.com/fumiyasac@github/items/da762ea512484a8291a3
     }
 
@@ -104,20 +122,20 @@ extension ViewController: UISearchBarDelegate {
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        let resultsfield = resultsfields.events[indexPath.row]
+        let resultsfield = resultsfields[indexPath.row]
         cell.textLabel?.text = resultsfield.title
         cell.detailTextLabel?.text = resultsfield.startedAt
         return cell
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return resultsfields.events.count
+        return resultsfields.count
     }
 }
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let resultsfield = resultsfields.events[indexPath.row]
+        let resultsfield = resultsfields[indexPath.row]
         let webPage = resultsfield.eventUrl
         let safariVC = SFSafariViewController(url: NSURL(string: webPage)! as URL)
         present(safariVC, animated: true, completion: nil)
